@@ -4,11 +4,16 @@ import numpy as np
 import pandas as pd
 from DQN import DQNAgent
 from create_model import create_network, create_dense_layer
+import psutil
+import time
+
+start = time.time()
+pid = psutil.Process().pid
 
 env = gym.make('CartPole-v1')
 
 batch_size = 32
-episodes = 10000
+episodes = 10
 done = False
 
 input_shape = env.observation_space.shape
@@ -40,8 +45,15 @@ for episode in range(episodes):
     episode_col.append(episode)
     score_col.append(score)
 df = pd.DataFrame({"episode": episode_col, "score": score_col}) 
-df.plot.line(x="episode", y="score") 
-plt.show()
+df.to_csv('cartpole_dqn_result.csv')
+
+end = time.time()
+print("The time of execution of above program is :",
+      (end-start) * 10**3, "ms")
+
+memory_info = psutil.Process(pid).memory_info()
+memory_usage = memory_info.rss / 1024.0 / 1024.0 # in MB
+print(f"Total memory consumed: {memory_usage:.2f} MB")
 
 
     

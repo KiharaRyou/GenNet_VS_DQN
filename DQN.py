@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import tensorflow as tf
 
 # Initialize the replay buffer
 class ReplayBuffer:
@@ -47,6 +46,7 @@ class DQNAgent:
               target = reward + self.gamma * np.amax(self.q_network.predict(next_state)[0])
             target_f = self.q_network.predict(state)
             target_f[0][action] = target
-            self.q_network.fit(tf.expand_dims(state, axis=-1), target_f, epochs=1, verbose=0)
+            self.q_network.fit(state, target_f, epochs=1, verbose=0)
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+    # def save(self, name):
